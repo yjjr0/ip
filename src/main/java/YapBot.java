@@ -71,27 +71,27 @@ public class YapBot {
     }
 
     public static void mark(String input) {
-        int index = Integer.parseInt(input.substring(5,6)) - 1;
-        if (index >= 0) {
+        try {
+            int index = Integer.parseInt(input.substring(5,6)) - 1;
             Task task = TASKS.get(index);
             task.mark();
             System.out.println("     Nice! I've marked this task as done:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________");
-        } else {
+        } catch (RuntimeException IndexOutOfBoundsException) {
             taskNotFound();
         }
     }
 
     public static void unmark(String input) {
-        int index = Integer.parseInt(input.substring(7, 8)) - 1;
-        if (index >= 0) {
+        try {
+            int index = Integer.parseInt(input.substring(7, 8)) - 1;
             Task task = TASKS.get(index);
             task.unmark();
             System.out.println("     OK, I've marked this task as not done yet:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________");
-        } else {
+        } catch (RuntimeException IndexOutOfBoundsException) {
             taskNotFound();
         }
     }
@@ -111,13 +111,13 @@ public class YapBot {
 
     public static void storeTask(String input) {
         if (input.startsWith("todo")) {
-            System.out.println("     Got it. I've added this ToDo task:\n" );
+            System.out.println("     Got it. I've added this ToDo task:" );
             addToDoTask(input);
         } else if (input.startsWith("deadline")) {
-            System.out.println("     Got it. I've added this Deadline task:\n" );
+            System.out.println("     Got it. I've added this Deadline task:" );
             addDeadlineTask(input);
         } else if (input.startsWith("event")) {
-            System.out.println("     Got it. I've added this Event task:\n" );
+            System.out.println("     Got it. I've added this Event task:" );
             addEventTask(input);
         } else {
             invalidCommand();
@@ -151,13 +151,13 @@ public class YapBot {
     }
 
     public static void delete(String input) {
-        int index = Integer.parseInt(input.substring(7,8)) - 1;
-        if (index >= 0) {
+        try {
+            int index = Integer.parseInt(input.substring(7,8)) - 1;
             Task task = TASKS.get(index);
             TASKS.remove(index);
             System.out.println("     Noted. I've removed this task:");
             echo(task);
-        } else {
+        } catch (RuntimeException IndexOutOfBoundsException) {
             taskNotFound();
         }
     }
