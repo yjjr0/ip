@@ -1,50 +1,130 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class YapBot {
     private static final String NAME = "YapBot";
+    private static final String FILENAME = "tasks.txt";
     private static final List<Task> TASKS = new ArrayList<>();
     private static final String GREETING =
             "____________________________________________________________\n" +
-            "     Hello! I'm " + NAME + "\n" +
-            "     What can I do for you?\n" +
-            "____________________________________________________________";
+            "                      Hello! I'm " + NAME + "\n" +
+            """
+                                What can I do for you?
+                        Enter [h]/[H] for a list of valid commands
+            ____________________________________________________________
+            """;
     private static final String FAREWELL =
             """
                          Bye. Hope to see you again soon!
             ____________________________________________________________
             """;
-    private static final String INVALIDCOMMAND = """
-               OOPS!!! I'm sorry, but I don't know what that means :-(
+    private static final String LOADING =
+            """
+                        loading your previous tasks for you...
             ____________________________________________________________
             """;
-    private static final String TASKNOTFOUND = """
+    private static final String HELP = """
+            Here is a list of valid commands ('-' is reserved for flags)
+                [T][_]~ adds a ToDo task to your list
+                [T][X]~ adds a marked ToDo task to your list
+                [D][_]~ adds a Deadline task to your list
+                [D][X]~ adds a marked Deadline task to your list
+                    flags:
+                        -by~    the specified deadline
+                [E][_]~ adds an Event task to your list
+                [E][X]~ adds a marked Event task to your list
+                    flags:
+                        -from~  start date/time
+                        -to~    end date/time
+                [mark]x marks the 'x-th' task as done
+                [unmark]x marks the 'x-th' task as not done
+                [delete]x deletes the 'x-th' task from your list
+                [list]~ shows a list of available tasks
+                [bye]~ exits the chatbot
+            ____________________________________________________________
+            """;
+    private static final String INVALIDCOMMAND =
+            """
+                    OOPS!!! I'm sorry, the command does not exists :-(
+                    Enter [h]/[H] for a list of valid commands
+            ____________________________________________________________
+            """;
+    private static final String INVALIDFLAG =
+            """
+                    OOPS!!! I'm sorry, the flag does not exists :-(
+                    Enter [h]/[H] for a list of valid commands
+            ____________________________________________________________
+            """;
+    private static final String TASKNOTFOUND =
+            """
                OOPS!!! I'm sorry, the task could not be located :-(
             ____________________________________________________________
             """;
 
     public static void main(String[] args) {
         greeting();
+        loadTasks();
         readTasks(args);
+        writeTasks();
+    }
+
+    public static void loadTasks() {
+        try {
+            File file = new File(FILENAME);
+            if (file.createNewFile()) {
+                System.out.println("Your file has been created");
+            } else {
+                loading();
+                Scanner scanner = new Scanner(file);
+                while (scanner.hasNext()) {
+                    storeTask(scanner.nextLine());
+                }
+                list();
+            }
+        } catch (IOException exception) {
+            taskNotFound();
+        }
     }
 
     public static void readTasks(String[] args) {
-        for (String input : args) {
-            formatInput(input);
+        for (String task : args) {
+            System.out.println(task);
 
-            if (input.startsWith("mark")) {
-                mark(input);
-            } else if (input.startsWith("unmark")) {
-                unmark(input);
-            } else if (input.startsWith("delete")) {
-                delete(input);
-            } else if (input.startsWith("bye")) {
-                farewell();
-            } else if (input.startsWith("list")) {
+            if (task.startsWith("[h]") || task.startsWith("[H]")) {
+                help();
+            } else if (task.startsWith("[mark]")) {
+                mark(task);
+            } else if (task.startsWith("[unmark]")) {
+                unmark(task);
+            } else if (task.startsWith("[delete]")) {
+                delete(task);
+            } else if (task.startsWith("[list]")) {
                 list();
+            } else if (task.startsWith("[bye]")) {
+                farewell();
             } else {
-                storeTask(input);
+                storeTask(task);
             }
+        }
+    }
+
+    public static void writeTasks() {
+        try {
+            FileWriter fileWriter = new FileWriter(FILENAME);
+            String tasks = "";
+
+            for (Task task : TASKS) {
+                tasks += (task + System.lineSeparator());
+            }
+
+            fileWriter.write(tasks);
+            fileWriter.close();
+        } catch (IOException exception) {
+            System.out.println("An error has occurred");
         }
     }
 
@@ -56,23 +136,29 @@ public class YapBot {
         System.out.println(FAREWELL);
     }
 
+    public static void loading() {
+        System.out.println(LOADING);
+    }
+
+    public static void help() {
+        System.out.println(HELP);
+    }
+
     public static void invalidCommand() {
         System.out.println(INVALIDCOMMAND);
+    }
+
+    public static void invalidFlag() {
+        System.out.println(INVALIDFLAG);
     }
 
     public static void taskNotFound() {
         System.out.println(TASKNOTFOUND);
     }
 
-    public static void formatInput(String input) {
-        String formatInput = "\n" + input + "\n" +
-                "____________________________________________________________";
-        System.out.println(formatInput);
-    }
-
     public static void mark(String input) {
         try {
-            int index = Integer.parseInt(input.substring(5,6)) - 1;
+            int index = getTaskNumber(input);
             Task task = TASKS.get(index);
             task.mark();
             System.out.println("     Nice! I've marked this task as done:\n" +
@@ -85,12 +171,24 @@ public class YapBot {
 
     public static void unmark(String input) {
         try {
-            int index = Integer.parseInt(input.substring(7, 8)) - 1;
+            int index = getTaskNumber(input);
             Task task = TASKS.get(index);
             task.unmark();
             System.out.println("     OK, I've marked this task as not done yet:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________");
+        } catch (RuntimeException IndexOutOfBoundsException) {
+            taskNotFound();
+        }
+    }
+
+    public static void delete(String input) {
+        try {
+            int index = getTaskNumber(input);
+            Task task = TASKS.get(index);
+            TASKS.remove(index);
+            System.out.println("     Noted. I've removed this task:");
+            echo(task);
         } catch (RuntimeException IndexOutOfBoundsException) {
             taskNotFound();
         }
@@ -109,57 +207,67 @@ public class YapBot {
         System.out.println("____________________________________________________________");
     }
 
-    public static void storeTask(String input) {
-        if (input.startsWith("todo")) {
-            System.out.println("     Got it. I've added this ToDo task:" );
-            addToDoTask(input);
-        } else if (input.startsWith("deadline")) {
-            System.out.println("     Got it. I've added this Deadline task:" );
-            addDeadlineTask(input);
-        } else if (input.startsWith("event")) {
-            System.out.println("     Got it. I've added this Event task:" );
-            addEventTask(input);
+    public static void storeTask(String task) {
+        if (task.startsWith("[T]")) {
+            System.out.println("     ToDo task available:" );
+            addToDoTask(task);
+        } else if (task.startsWith("[D]")) {
+            System.out.println("     Deadline task available:" );
+            addDeadlineTask(task);
+        } else if (task.startsWith("[E]")) {
+            System.out.println("     Event task available:" );
+            addEventTask(task);
         } else {
             invalidCommand();
         }
     }
 
     public static void addToDoTask(String input) {
-        String name = input.substring(5);
-        Task task = new ToDoTask(name);
+        String name = getName(input);
+        boolean isMarked = isMarked(input);
+        Task task = new ToDoTask(name, isMarked);
         TASKS.add(task);
         echo(task);
     }
 
     public static void addDeadlineTask(String input) {
-        String[] fields = input.split("/by");
-        String name = fields[0].substring(9);
-        String deadline = fields[1].substring(1);
-        Task task = new DeadlineTask(name, deadline);
+        String name = getName(input);
+        boolean isMarked = isMarked(input);
+        String deadline = getFlag(input, "-by.");
+        Task task = new DeadlineTask(name, isMarked, deadline);
         TASKS.add(task);
         echo(task);
     }
 
     public static void addEventTask(String input) {
-        String[] fields = input.split("/from");
-        String name = fields[0].substring(6);
-        String startDateTime = fields[1].split("/to")[0].substring(1);
-        String endDateTime = fields[1].split("/to")[1].substring(1);
-        Task task = new EventTask(name, startDateTime, endDateTime);
+        String name = getName(input);
+        boolean isMarked = isMarked(input);
+        String startDateTime = getFlag(input, "-from.");
+        String endDateTime = getFlag(input, "-to.");
+        Task task = new EventTask(name, isMarked, startDateTime, endDateTime);
         TASKS.add(task);
         echo(task);
     }
 
-    public static void delete(String input) {
+    public static String getName(String input) {
+        return input.substring(7).replaceAll(".-.*", "");
+    }
+
+    public static int getTaskNumber(String input) {
+        return Integer.parseInt(input.replaceAll(".*]", "")) - 1;
+    }
+
+    public static String getFlag(String input, String flag) {
         try {
-            int index = Integer.parseInt(input.substring(7,8)) - 1;
-            Task task = TASKS.get(index);
-            TASKS.remove(index);
-            System.out.println("     Noted. I've removed this task:");
-            echo(task);
-        } catch (RuntimeException IndexOutOfBoundsException) {
-            taskNotFound();
+            return input.split(flag)[1].replaceAll(".-.*", "");
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            invalidFlag();
         }
+        return "";
+    }
+
+    public static boolean isMarked(String input) {
+        return input.charAt(4) == 'X';
     }
 
     public static void echo(Task task) {

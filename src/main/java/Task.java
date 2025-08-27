@@ -2,9 +2,9 @@ public class Task {
     private String name;
     private boolean isMarked;
 
-    public Task(String name) {
+    public Task(String name, boolean isMarked) {
         this.name = name;
-        this.isMarked = false;
+        this.isMarked = isMarked;
     }
 
     public void mark() {
@@ -17,7 +17,7 @@ public class Task {
 
     @Override
     public String toString() {
-        String status = isMarked ? "X" : " ";
-        return String.format("[%s] %s", status, name);
+        String status = this.isMarked ? "X" : " ";
+        return String.format("[%s] %s", status, this.name);
     }
 }
