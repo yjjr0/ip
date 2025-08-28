@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -34,12 +36,12 @@ public class YapBot {
                 [D][_]~ adds a Deadline task to your list
                 [D][X]~ adds a marked Deadline task to your list
                     flags:
-                        -by~    the specified deadline
+                        -by DD/MM/YYYY      the specified deadline
                 [E][_]~ adds an Event task to your list
                 [E][X]~ adds a marked Event task to your list
                     flags:
-                        -from~  start date/time
-                        -to~    end date/time
+                        -from~              start date/time
+                        -to~                end date/time
                 [mark]x marks the 'x-th' task as done
                 [unmark]x marks the 'x-th' task as not done
                 [delete]x deletes the 'x-th' task from your list
