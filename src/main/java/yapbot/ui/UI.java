@@ -1,4 +1,7 @@
-public class UI {
+package yapbot.ui;
+
+public class UI
+{
     private static final String GREETING =
             """
             ____________________________________________________________
@@ -12,22 +15,22 @@ public class UI {
                          Bye. Hope to see you again soon!
             ____________________________________________________________
             """;
-    private static final String CREATINGFILE =
+    private static final String CREATING_FILE =
             """
                         Creating a brand new file for you...
             ____________________________________________________________
             """;
-    private static final String CREATEDFILE =
+    private static final String CREATED_FILE =
             """
                             Your file has been created!
             ____________________________________________________________
             """;
-    private static final String LOADINGFILE =
+    private static final String LOADING_FILE =
             """
                         Loading your previous tasks for you...
             ____________________________________________________________
             """;
-    private static final String LOADEDFILE =
+    private static final String LOADED_FILE =
             """
                             Your tasks has been loaded!
             ____________________________________________________________
@@ -52,61 +55,94 @@ public class UI {
                 [bye]~ exits the chatbot
             ____________________________________________________________
             """;
-    private static final String INVALIDCOMMAND =
+    private static final String INVALID_COMMAND =
             """
                     OOPS!!! I'm sorry, the command does not exists :-(
                     Enter [h]/[H] for a list of valid commands
             ____________________________________________________________
             """;
-    private static final String INVALIDFLAG =
+    private static final String INVALID_DATE_FORMAT =
+            """
+                    OOPS!!! I'm sorry, the date provided is invalid :-(
+                    Enter [h]/[H] for a list of valid commands
+            ____________________________________________________________
+            """;
+
+    private static final String INVALID_FLAG =
             """
                     OOPS!!! I'm sorry, the flag does not exists :-(
                     Enter [h]/[H] for a list of valid commands
             ____________________________________________________________
             """;
-    private static final String TASKNOTFOUND =
+    private static final String INVALID_FILE =
+            """
+                    OOPS!!! I'm sorry, the file does not exists :-(
+                    Enter [h]/[H] for a list of valid commands
+            ____________________________________________________________
+            """;
+    private static final String TASK_NOT_FOUND =
             """
                OOPS!!! I'm sorry, the task could not be located :-(
             ____________________________________________________________
             """;
 
-    public static void greeting() {
+    public static void greeting()
+    {
         System.out.println(GREETING);
     }
 
-    public static void farewell() {
+    public static void farewell()
+    {
         System.out.println(FAREWELL);
     }
 
-    public static void creatingFile() {
-        System.out.println(CREATINGFILE);
+    public static void creatingFile()
+    {
+        System.out.println(CREATING_FILE);
     }
 
-    public static void createdFile() {
-        System.out.println(CREATEDFILE);
+    public static void createdFile()
+    {
+        System.out.println(CREATED_FILE);
     }
 
-    public static void loadingFile() {
-        System.out.println(LOADINGFILE);
+    public static void loadingFile()
+    {
+        System.out.println(LOADING_FILE);
     }
 
-    public static void loadedFile() {
-        System.out.println(LOADEDFILE);
+    public static void loadedFile()
+    {
+        System.out.println(LOADED_FILE);
     }
 
-    public static void help() {
+    public static void help()
+    {
         System.out.println(HELP);
     }
 
-    public static void invalidCommand() {
-        System.out.println(INVALIDCOMMAND);
+    public static void invalidCommand()
+    {
+        System.out.println(INVALID_COMMAND);
     }
 
-    public static void invalidFlag() {
-        System.out.println(INVALIDFLAG);
+    public static void invalidDateFormat()
+    {
+        System.out.println(INVALID_DATE_FORMAT);
     }
 
-    public static void taskNotFound() {
-        System.out.println(TASKNOTFOUND);
+    public static void invalidFlag()
+    {
+        System.out.println(INVALID_FLAG);
+    }
+
+    public static void invalidFile()
+    {
+        System.out.println(INVALID_FILE);
+    }
+
+    public static void taskNotFound()
+    {
+        System.out.println(TASK_NOT_FOUND);
     }
 }
