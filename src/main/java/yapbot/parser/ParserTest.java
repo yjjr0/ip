@@ -1,0 +1,124 @@
+package yapbot.parser;
+
+import org.junit.Test;
+import yapbot.ui.UI;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+public class ParserTest
+{
+    String[][] TEST_TASKS = {
+            {
+                "[T][_] todo",
+                "[D][_] deadline -by 22/11/2003",
+                "[E][_] event -from Mon -to Fri",
+            },
+            {
+                "[T][X] todo",
+                "[D][X] deadline -by 22/11/2003",
+                "[E][X] event -from Mon -to Fri",
+            }
+    };
+
+    private void initTestTasks(int index)
+    {
+        UI.loadingFile();
+
+        String[] tasks = TEST_TASKS[index];
+        for (String task : tasks)
+        {
+            Parser.storeTask(task);
+        }
+        Parser.list();
+
+        UI.loadedFile();
+    }
+
+    @Test
+    public void testMark()
+    {
+        initTestTasks(0);
+
+        String[] VALID_MARKS = {
+                "[mark]1",
+                "[mark]2",
+                "[mark]3",
+        };
+
+        for (String validMark : VALID_MARKS) {
+            assertTrue(Parser.mark(validMark));
+        }
+        Parser.list();
+
+        String[] INVALID_MARKS = {
+                "[mak]",
+                "[mark]",
+                "[mark]0",
+                "[mark]4",
+                "mark1",
+        };
+        for (String invalidMark : INVALID_MARKS) {
+            assertFalse(Parser.mark(invalidMark));
+        }
+        Parser.list();
+    }
+
+    @Test
+    public void testUnmark()
+    {
+        initTestTasks(1);
+
+        String[] VALID_UNMARKS = {
+                "[unmark]1",
+                "[unmark]2",
+                "[unmark]3",
+        };
+
+        for (String validUnmark : VALID_UNMARKS) {
+            assertTrue(Parser.unmark(validUnmark));
+        }
+        Parser.list();
+
+        String[] INVALID_UNMARKS = {
+                "[unmak]",
+                "[unmark]",
+                "[unmark]0",
+                "[unmark]4",
+                "unmark1",
+        };
+        for (String invalidUnmark : INVALID_UNMARKS) {
+            assertFalse(Parser.unmark(invalidUnmark));
+        }
+        Parser.list();
+    }
+
+    @Test
+    public void testDelete()
+    {
+        initTestTasks(0);
+
+        String[] VALID_DELETES = {
+                "[delete]3",
+                "[delete]2",
+                "[delete]1",
+        };
+
+        for (String validDelete : VALID_DELETES) {
+            assertTrue(Parser.delete(validDelete));
+        }
+        Parser.list();
+
+        String[] INVALID_DELETES = {
+                "[delet]",
+                "[delete]",
+                "[delete]0",
+                "[delete]4",
+                "delete",
+        };
+        for (String invalidDelete : INVALID_DELETES) {
+            assertFalse(Parser.delete(invalidDelete));
+        }
+        Parser.list();
+    }
+}
