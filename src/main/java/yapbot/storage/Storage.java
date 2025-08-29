@@ -1,0 +1,62 @@
+package yapbot.storage;
+
+import yapbot.parser.Parser;
+import yapbot.taskmanager.TaskList;
+import yapbot.ui.UI;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Storage
+{
+    private static final String FILENAME = "tasks.txt";
+
+    public static void loadTasks()
+    {
+        try
+        {
+            File file = new File(FILENAME);
+            if (file.createNewFile())
+            {
+                UI.creatingFile();
+                UI.createdFile();
+            } else
+            {
+                UI.loadingFile();
+                Parser.loadFile(file);
+                UI.loadedFile();
+                Parser.list();
+            }
+        } catch (IOException exception)
+        {
+            UI.invalidFile();
+        } catch (SecurityException exception)
+        {
+            UI.invalidFile();
+        }
+    }
+
+    public static void readTasks(String[] args)
+    {
+        for (String task : args)
+        {
+            System.out.println(task);
+            Parser.setTask(task);
+        }
+    }
+
+    public static void writeTasks()
+    {
+        try
+        {
+            FileWriter fileWriter = new FileWriter(FILENAME);
+            String tasks = TaskList.getTasksAsTXT();
+            fileWriter.write(tasks);
+            fileWriter.close();
+        } catch (IOException exception)
+        {
+            UI.invalidFile();
+        }
+    }
+}

@@ -1,22 +1,29 @@
-public class Task {
+package yapbot.taskmanager;
+
+public class Task
+{
     private String name;
     private boolean isMarked;
 
-    public Task(String name, boolean isMarked) {
+    public Task(String name, boolean isMarked)
+    {
         this.name = name;
         this.isMarked = isMarked;
     }
 
-    public void mark() {
+    public void mark()
+    {
         this.isMarked = true;
     }
 
-    public void unmark() {
+    public void unmark()
+    {
         this.isMarked = false;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         String status = this.isMarked ? "X" : " ";
         return String.format("[%s] %s", status, this.name);
     }
