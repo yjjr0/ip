@@ -55,7 +55,7 @@ public class Parser
         }
     }
 
-    public static void mark(String input)
+    public static boolean mark(String input)
     {
         try
         {
@@ -65,13 +65,15 @@ public class Parser
             System.out.println("     Nice! I've marked this task as done:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________");
+            return true;
         } catch (RuntimeException IndexOutOfBoundsException)
         {
             UI.taskNotFound();
+            return false;
         }
     }
 
-    public static void unmark(String input)
+    public static boolean unmark(String input)
     {
         try
         {
@@ -81,12 +83,14 @@ public class Parser
             System.out.println("     OK, I've marked this task as not done yet:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________");
+            return true;
         } catch (RuntimeException IndexOutOfBoundsException) {
             UI.taskNotFound();
+            return false;
         }
     }
 
-    public static void delete(String input)
+    public static boolean delete(String input)
     {
         try
         {
@@ -95,9 +99,11 @@ public class Parser
             TaskList.removeTask(index);
             System.out.println("     Noted. I've removed this task:");
             echo(task);
+            return true;
         } catch (RuntimeException IndexOutOfBoundsException)
         {
             UI.taskNotFound();
+            return false;
         }
     }
 
