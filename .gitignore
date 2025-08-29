@@ -3,6 +3,9 @@
 /out/
 /*.iml
 
+# jar files
+yapbot.jar
+
 # Gradle build files
 /.gradle/
 /build/
