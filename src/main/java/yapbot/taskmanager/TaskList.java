@@ -38,6 +38,24 @@ public class TaskList
         return TASKS.size();
     }
 
+    public static boolean search(String keyword) {
+        int index = 1;
+
+        for (Task task : TASKS)
+        {
+            if (matching(task, keyword)) {
+                System.out.println("        " + index + ". " + task.toString());
+                index++;
+            }
+        }
+
+        return index != 1;
+    }
+
+    private static boolean matching(Task task, String keyword) {
+        return task.toString().contains(keyword);
+    }
+
     public static String getTasksAsTXT()
     {
         String tasks = "";

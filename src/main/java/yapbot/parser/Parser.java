@@ -43,6 +43,9 @@ public class Parser
         } else if (task.startsWith("[delete]"))
         {
             delete(task);
+        } else if (task.startsWith("[find]"))
+        {
+            find(task);
         } else if (task.startsWith("[list]"))
         {
             list();
@@ -100,6 +103,22 @@ public class Parser
             System.out.println("     Noted. I've removed this task:");
             echo(task);
             return true;
+        } catch (RuntimeException IndexOutOfBoundsException)
+        {
+            UI.taskNotFound();
+            return false;
+        }
+    }
+
+    public static boolean find(String input)
+    {
+        try
+        {
+            String keyword = getTaskName(input);
+            System.out.println("     Here are the tasks that matches with " + "'" + keyword + "'");
+            boolean found = TaskList.search(keyword);
+            System.out.println("____________________________________________________________");
+            return found;
         } catch (RuntimeException IndexOutOfBoundsException)
         {
             UI.taskNotFound();
@@ -166,12 +185,12 @@ public class Parser
 
     public static String getTaskName(String input)
     {
-        return input.replaceAll(".*].", "").replaceAll(".-.*", "");
+        return input.replaceAll("\\[.*\\].", "").replaceAll(".-.*", "");
     }
 
     public static int getTaskNumber(String input)
     {
-        return Integer.parseInt(input.replaceAll(".*]", "")) - 1;
+        return Integer.parseInt(input.replaceAll("\\[.*\\].", "")) - 1;
     }
 
     public static String getFlag(String input, String flag)
