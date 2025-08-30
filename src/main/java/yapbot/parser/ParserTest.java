@@ -10,14 +10,19 @@ public class ParserTest
 {
     String[][] TEST_TASKS = {
             {
-                "[T][_] todo",
-                "[D][_] deadline -by 22/11/2003",
-                "[E][_] event -from Mon -to Fri",
+                "[T][ ] todo",
+                "[D][ ] deadline -by 22/11/2003",
+                "[E][ ] event -from Mon -to Fri",
             },
             {
                 "[T][X] todo",
                 "[D][X] deadline -by 22/11/2003",
                 "[E][X] event -from Mon -to Fri",
+            },
+            {
+                "[T][ ] todo read book",
+                "[D][ ] deadline return book -by 22/11/2003",
+                "[E][ ] event -from Mon -to Fri",
             }
     };
 
@@ -41,9 +46,9 @@ public class ParserTest
         initTestTasks(0);
 
         String[] VALID_MARKS = {
-                "[mark]1",
-                "[mark]2",
-                "[mark]3",
+                "[mark] 1",
+                "[mark] 2",
+                "[mark] 3",
         };
 
         for (String validMark : VALID_MARKS) {
@@ -54,9 +59,9 @@ public class ParserTest
         String[] INVALID_MARKS = {
                 "[mak]",
                 "[mark]",
-                "[mark]0",
-                "[mark]4",
-                "mark1",
+                "[mark] 0",
+                "[mark] 4",
+                "mark 1",
         };
         for (String invalidMark : INVALID_MARKS) {
             assertFalse(Parser.mark(invalidMark));
@@ -70,9 +75,9 @@ public class ParserTest
         initTestTasks(1);
 
         String[] VALID_UNMARKS = {
-                "[unmark]1",
-                "[unmark]2",
-                "[unmark]3",
+                "[unmark] 1",
+                "[unmark] 2",
+                "[unmark] 3",
         };
 
         for (String validUnmark : VALID_UNMARKS) {
@@ -83,9 +88,9 @@ public class ParserTest
         String[] INVALID_UNMARKS = {
                 "[unmak]",
                 "[unmark]",
-                "[unmark]0",
-                "[unmark]4",
-                "unmark1",
+                "[unmark] 0",
+                "[unmark] 4",
+                "unmark 1",
         };
         for (String invalidUnmark : INVALID_UNMARKS) {
             assertFalse(Parser.unmark(invalidUnmark));
@@ -99,9 +104,9 @@ public class ParserTest
         initTestTasks(0);
 
         String[] VALID_DELETES = {
-                "[delete]3",
-                "[delete]2",
-                "[delete]1",
+                "[delete] 3",
+                "[delete] 2",
+                "[delete] 1",
         };
 
         for (String validDelete : VALID_DELETES) {
@@ -112,13 +117,41 @@ public class ParserTest
         String[] INVALID_DELETES = {
                 "[delet]",
                 "[delete]",
-                "[delete]0",
-                "[delete]4",
+                "[delete] 0",
+                "[delete] 4",
                 "delete",
         };
         for (String invalidDelete : INVALID_DELETES) {
             assertFalse(Parser.delete(invalidDelete));
         }
         Parser.list();
+    }
+
+    @Test
+    public void testFind()
+    {
+        initTestTasks(2);
+
+        String[] VALID_FINDS = {
+                "[find] todo",
+                "[find] deadline",
+                "[find] event",
+                "[find] book",
+                "[find] 22"
+        };
+
+        for (String validFind : VALID_FINDS) {
+            assertTrue(Parser.find(validFind));
+        }
+
+        String[] INVALID_FINDS = {
+                "[find] toodo",
+                "[find] dedlin",
+                "[find] evnt",
+                "[find] boook",
+        };
+        for (String invalidFind : INVALID_FINDS) {
+            assertFalse(Parser.find(invalidFind));
+        }
     }
 }
