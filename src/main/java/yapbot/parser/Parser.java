@@ -116,9 +116,9 @@ public class Parser
         {
             String keyword = getTaskName(input);
             System.out.println("     Here are the tasks that matches with " + "'" + keyword + "'");
-            boolean found = TaskList.search(keyword);
+            boolean isFound = TaskList.search(keyword);
             System.out.println("____________________________________________________________");
-            return found;
+            return isFound;
         } catch (RuntimeException IndexOutOfBoundsException)
         {
             UI.taskNotFound();

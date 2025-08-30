@@ -51,7 +51,7 @@ public class Storage
         try
         {
             FileWriter fileWriter = new FileWriter(FILENAME);
-            String tasks = TaskList.getTasksAsTXT();
+            String tasks = TaskList.getTasksAsTxt();
             fileWriter.write(tasks);
             fileWriter.close();
         } catch (IOException exception)
