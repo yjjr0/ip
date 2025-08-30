@@ -56,7 +56,7 @@ public class TaskList
         return task.toString().contains(keyword);
     }
 
-    public static String getTasksAsTXT()
+    public static String getTasksAsTxt()
     {
         String tasks = "";
 
