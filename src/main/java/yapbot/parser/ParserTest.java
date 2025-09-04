@@ -6,8 +6,7 @@ import yapbot.ui.UI;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class ParserTest
-{
+public class ParserTest {
     String[][] TEST_TASKS = {
             {
                 "[T][ ] todo",
@@ -31,8 +30,7 @@ public class ParserTest
         UI.loadingFile();
 
         String[] tasks = TEST_TASKS[index];
-        for (String task : tasks)
-        {
+        for (String task : tasks) {
             Parser.storeTask(task);
         }
         Parser.list();
@@ -41,8 +39,7 @@ public class ParserTest
     }
 
     @Test
-    public void testMark()
-    {
+    public void testMark() {
         initTestTasks(0);
 
         String[] VALID_MARKS = {
@@ -52,7 +49,7 @@ public class ParserTest
         };
 
         for (String validMark : VALID_MARKS) {
-            assertTrue(Parser.mark(validMark));
+            assertTrue(Parser.markTest(validMark));
         }
         Parser.list();
 
@@ -64,14 +61,13 @@ public class ParserTest
                 "mark 1",
         };
         for (String invalidMark : INVALID_MARKS) {
-            assertFalse(Parser.mark(invalidMark));
+            assertFalse(Parser.markTest(invalidMark));
         }
         Parser.list();
     }
 
     @Test
-    public void testUnmark()
-    {
+    public void testUnmark() {
         initTestTasks(1);
 
         String[] VALID_UNMARKS = {
@@ -81,7 +77,7 @@ public class ParserTest
         };
 
         for (String validUnmark : VALID_UNMARKS) {
-            assertTrue(Parser.unmark(validUnmark));
+            assertTrue(Parser.unmarkTest(validUnmark));
         }
         Parser.list();
 
@@ -93,14 +89,13 @@ public class ParserTest
                 "unmark 1",
         };
         for (String invalidUnmark : INVALID_UNMARKS) {
-            assertFalse(Parser.unmark(invalidUnmark));
+            assertFalse(Parser.unmarkTest(invalidUnmark));
         }
         Parser.list();
     }
 
     @Test
-    public void testDelete()
-    {
+    public void testDelete() {
         initTestTasks(0);
 
         String[] VALID_DELETES = {
@@ -110,7 +105,7 @@ public class ParserTest
         };
 
         for (String validDelete : VALID_DELETES) {
-            assertTrue(Parser.delete(validDelete));
+            assertTrue(Parser.deleteTest(validDelete));
         }
         Parser.list();
 
@@ -122,7 +117,7 @@ public class ParserTest
                 "delete",
         };
         for (String invalidDelete : INVALID_DELETES) {
-            assertFalse(Parser.delete(invalidDelete));
+            assertFalse(Parser.deleteTest(invalidDelete));
         }
         Parser.list();
     }
@@ -141,7 +136,7 @@ public class ParserTest
         };
 
         for (String validFind : VALID_FINDS) {
-            assertTrue(Parser.find(validFind));
+            assertTrue(Parser.findTest(validFind));
         }
 
         String[] INVALID_FINDS = {
@@ -151,7 +146,7 @@ public class ParserTest
                 "[find] boook",
         };
         for (String invalidFind : INVALID_FINDS) {
-            assertFalse(Parser.find(invalidFind));
+            assertFalse(Parser.findTest(invalidFind));
         }
     }
 }
