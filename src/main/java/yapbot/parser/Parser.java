@@ -30,37 +30,59 @@ public class Parser {
     }
 
     /**
-     * Processes the CLI input by the specified command
+     * Processes the command input from the user
      *
-     * @param task the CLI input from the user
+     * @param task the command input from the user
      */
-    public static void setTask(String task) {
+    public static String setTask(String task) {
         if (task.startsWith("[h]") || task.startsWith("[H]")) {
-            UI.help();
+            return UI.help();
         } else if (task.startsWith("[mark]")) {
-            mark(task);
+            return mark(task);
         } else if (task.startsWith("[unmark]")) {
-            unmark(task);
+            return unmark(task);
         } else if (task.startsWith("[delete]")) {
-            delete(task);
+            return delete(task);
         } else if (task.startsWith("[find]")) {
-            find(task);
+            return find(task);
         } else if (task.startsWith("[list]")) {
-            list();
+            return list();
         } else if (task.startsWith("[bye]")) {
-            UI.farewell();
+            return UI.farewell();
         } else {
-            storeTask(task);
+            return storeTask(task);
         }
     }
 
     /**
      * Marks the task at the specified index as done
      *
-     * @param input the CLI input from the user
+     * @param input the command input from the user
+     * @return the task formated as a string
+     */
+    public static String mark(String input) {
+        try {
+            int index = getTaskNumber(input);
+            Task task = TaskList.getTask(index);
+            task.mark();
+            String response = "     Nice! I've marked this task as done:\n" +
+                    "        " + task + "\n" +
+                    "____________________________________________________________";
+
+            System.out.println(response);
+            return response;
+        } catch (RuntimeException IndexOutOfBoundsException) {
+            return UI.taskNotFound();
+        }
+    }
+
+    /**
+     * the testing version of String mark(input : String)
+     *
+     * @param input the command input from the user
      * @return true if the task is marked, else false
      */
-    public static boolean mark(String input) {
+    public static boolean markTest(String input) {
         try {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
@@ -78,10 +100,33 @@ public class Parser {
     /**
      * Unmarks the task at the specified index as not done
      *
-     * @param input the CLI input from the user
+     * @param input the command input from the user
+     * @return the task formated as a string
+     */
+    public static String unmark(String input) {
+        try {
+            int index = getTaskNumber(input);
+            Task task = TaskList.getTask(index);
+            task.unmark();
+            String response = "     OK, I've marked this task as not done yet:\n" +
+                    "        " + task + "\n" +
+                    "____________________________________________________________";
+
+            System.out.println(response);
+            return response;
+        } catch (RuntimeException IndexOutOfBoundsException) {
+            return UI.taskNotFound();
+        }
+    }
+
+
+    /**
+     * the testing version of String unmark(input : String)
+     *
+     * @param input the command input from the user
      * @return true if the task is unmarked, else false
      */
-    public static boolean unmark(String input) {
+    public static boolean unmarkTest(String input) {
         try {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
@@ -99,10 +144,29 @@ public class Parser {
     /**
      * Deletes the task at the specified index
      *
-     * @param input the CLI input from the user
+     * @param input the command input from the user
+     * @return the task formated as a string
+     */
+    public static String delete(String input) {
+        try {
+            int index = getTaskNumber(input);
+            Task task = TaskList.removeTask(index);
+            String response = "     Noted. I've removed this task:\n" + echo(task);
+
+            System.out.println(response);
+            return response;
+        } catch (RuntimeException IndexOutOfBoundsException) {
+            return UI.taskNotFound();
+        }
+    }
+
+    /**
+     * the testing version of String delete(input : String)
+     *
+     * @param input the command input from the user
      * @return true if the task is deleted, else false
      */
-    public static boolean delete(String input) {
+    public static boolean deleteTest(String input) {
         try {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
@@ -116,17 +180,36 @@ public class Parser {
         }
     }
 
+
+    /**
+     * Deletes the task at the specified index
+     *
+     * @param input the command input from the user
+     * @return the task formated as a string
+     */
+    public static String find(String input) {
+        try {
+            String keyword = getTaskDescription(input);
+            String response = TaskList.search(keyword);
+
+            System.out.println(response);
+            return response;
+        } catch (RuntimeException IndexOutOfBoundsException) {
+            return UI.taskNotFound();
+        }
+    }
+
     /**
      * Finds the task with the specified keyword
      *
      * @param input the CLI input from the user
      * @return true if the keyword is found, else false
      */
-    public static boolean find(String input) {
+    public static boolean findTest(String input) {
         try {
             String keyword = getTaskDescription(input);
             System.out.println("     Here are the tasks that matches with " + "'" + keyword + "'");
-            boolean isFound = TaskList.search(keyword);
+            boolean isFound = TaskList.searchTest(keyword);
             System.out.println("____________________________________________________________");
             return isFound;
         } catch (RuntimeException IndexOutOfBoundsException) {
@@ -138,11 +221,11 @@ public class Parser {
     /**
      * Lists the tasks stored in the local storage
      */
-    public static void list()
+    public static String list()
     {
-        System.out.println("     Here are the tasks in your list:");
-        TaskList.listTasks();
-        System.out.println("____________________________________________________________");
+        String response = TaskList.listTasks();
+        System.out.println(response);
+        return response;
     }
 
     /**
@@ -150,18 +233,18 @@ public class Parser {
      *
      * @param task the CLI input from the user
      */
-    public static void storeTask(String task) {
+    public static String storeTask(String task) {
         if (task.startsWith("[T]")) {
             System.out.println("     ToDo task available:" );
-            addToDoTask(task);
+            return addToDoTask(task);
         } else if (task.startsWith("[D]")) {
             System.out.println("     Deadline task available:" );
-            addDeadlineTask(task);
+            return addDeadlineTask(task);
         } else if (task.startsWith("[E]")) {
             System.out.println("     Event task available:" );
-            addEventTask(task);
+            return addEventTask(task);
         } else {
-            UI.invalidCommand();
+            return UI.invalidCommand();
         }
     }
 
@@ -170,12 +253,12 @@ public class Parser {
      *
      * @param input the CLI input from the user
      */
-    public static void addToDoTask(String input) {
+    public static String addToDoTask(String input) {
         String name = getTaskDescription(input);
         boolean isMarked = isMarked(input);
         Task task = new ToDoTask(name, isMarked);
         TaskList.addTask(task);
-        echo(task);
+        return echo(task);
     }
 
     /**
@@ -183,13 +266,13 @@ public class Parser {
      *
      * @param input the CLI input from the user
      */
-    public static void addDeadlineTask(String input) {
+    public static String addDeadlineTask(String input) {
         String name = getTaskDescription(input);
         boolean isMarked = isMarked(input);
         String deadline = getFlag(input, "-by.");
         Task task = new DeadlineTask(name, isMarked, deadline);
         TaskList.addTask(task);
-        echo(task);
+        return echo(task);
     }
 
     /**
@@ -197,14 +280,14 @@ public class Parser {
      *
      * @param input the CLI input from the user
      */
-    public static void addEventTask(String input) {
+    public static String addEventTask(String input) {
         String name = getTaskDescription(input);
         boolean isMarked = isMarked(input);
         String startDateTime = getFlag(input, "-from.");
         String endDateTime = getFlag(input, "-to.");
         Task task = new EventTask(name, isMarked, startDateTime, endDateTime);
         TaskList.addTask(task);
-        echo(task);
+        return echo(task);
     }
 
     /**
@@ -253,17 +336,17 @@ public class Parser {
     }
 
     /**
-     * Prints the task description to the terminal
+     * returns the string format of the task description and number of tasks available
      *
      * @param task the task object
+     * @return the task description and number of tasks available
      */
-    public static void echo(Task task)
-    {
-        String output =
-                "        " + task + "\n" +
+    public static String echo(Task task) {
+        String output = "        " + task + "\n" +
                         "     Now you have " + TaskList.numOfTasks() + " tasks in the list\n" +
                         "____________________________________________________________";
 
         System.out.println(output);
+        return output;
     }
 }

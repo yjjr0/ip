@@ -1,7 +1,6 @@
 package yapbot.ui;
 
-public class UI
-{
+public class UI {
     private static final String SYSTEM_MESSAGE_GREETING =
             """
             ____________________________________________________________
@@ -86,63 +85,63 @@ public class UI
             ____________________________________________________________
             """;
 
-    public static void greeting()
-    {
+    public static String greeting() {
         System.out.println(SYSTEM_MESSAGE_GREETING);
+        return SYSTEM_MESSAGE_GREETING;
     }
 
-    public static void farewell()
-    {
+    public static String farewell() {
         System.out.println(SYSTEM_MESSAGE_FAREWELL);
+        return SYSTEM_MESSAGE_FAREWELL;
     }
 
-    public static void creatingFile()
-    {
+    public static String creatingFile() {
         System.out.println(SYSTEM_MESSAGE_CREATING_FILE);
+        return SYSTEM_MESSAGE_CREATING_FILE;
     }
 
-    public static void createdFile()
-    {
+    public static String createdFile() {
         System.out.println(SYSTEM_MESSAGE_CREATED_FILE);
+        return SYSTEM_MESSAGE_CREATED_FILE;
     }
 
-    public static void loadingFile()
-    {
+    public static String loadingFile() {
         System.out.println(SYSTEM_MESSAGE_LOADING_FILE);
+        return SYSTEM_MESSAGE_LOADING_FILE;
     }
 
-    public static void loadedFile()
-    {
+    public static String loadedFile() {
         System.out.println(SYSTEM_MESSAGE_LOADED_FILE);
+        return SYSTEM_MESSAGE_LOADED_FILE;
     }
 
-    public static void help()
-    {
+    public static String help() {
         System.out.println(SYSTEM_MESSAGE_HELP);
+        return SYSTEM_MESSAGE_HELP;
     }
 
-    public static void invalidCommand()
-    {
+    public static String invalidCommand() {
         System.out.println(SYSTEM_ERROR_INVALID_COMMAND);
+        return SYSTEM_ERROR_INVALID_COMMAND;
     }
 
-    public static void invalidDateFormat()
-    {
+    public static String invalidDateFormat() {
         System.out.println(SYSTEM_ERROR_INVALID_DATE_FORMAT);
+        return SYSTEM_ERROR_INVALID_DATE_FORMAT;
     }
 
-    public static void invalidFlag()
-    {
+    public static String invalidFlag() {
         System.out.println(SYSTEM_ERROR_INVALID_FLAG);
+        return SYSTEM_ERROR_INVALID_FLAG;
     }
 
-    public static void invalidFile()
-    {
+    public static String invalidFile() {
         System.out.println(SYSTEM_ERROR_INVALID_FILE);
+        return SYSTEM_ERROR_INVALID_FILE;
     }
 
-    public static void taskNotFound()
-    {
+    public static String taskNotFound() {
         System.out.println(SYSTEM_ERROR_TASK_NOT_FOUND);
+        return SYSTEM_ERROR_TASK_NOT_FOUND;
     }
 }
