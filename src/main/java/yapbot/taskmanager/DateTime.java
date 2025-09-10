@@ -58,4 +58,17 @@ public class DateTime {
         int year = Integer.parseInt(DateFields[2]);
         return LocalDate.of(year, month, day);
     }
+
+    /**
+     * Converts dates from ISO format to DD Month_Name YYYY
+     *
+     * @param date String format of the date
+     * @return the date as a LocalDate object
+     */
+    public static String convertFromISO(LocalDate date) {
+        int day = date.getDayOfMonth();
+        Month month = date.getMonth();
+        int year = date.getYear();
+        return day + " " + month + " " + year;
+    }
 }

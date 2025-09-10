@@ -53,7 +53,12 @@ public class UI {
                 [mark]x marks the 'x-th' task as done
                 [unmark]x marks the 'x-th' task as not done
                 [delete]x deletes the 'x-th' task from your list
+                [find]~ finds all tasks that matches with the specified keyword
+                [update]x - updates the 'x-th' task with the new description
+                    flags:
+                         -to~               new description
                 [list]~ shows a list of available tasks
+                [reminder]~ shows a list of available tasks sorted in chronological order
                 [bye]~ exits the chatbot
             ____________________________________________________________
             """;
@@ -140,15 +145,27 @@ public class UI {
         return response;
     }
 
+    public static String addedTask(Task task) {
+        String response = "Noted. I've added this task to the list:\n" + echo(task);
+        System.out.println(response);
+        return response;
+    }
+
     public static String deletedTask(Task task) {
         String response = "Noted. I've removed this task:\n" + echo(task);
         System.out.println(response);
         return response;
     }
 
+    public static String updatedTask(Task task) {
+        String response = "Noted. I've updated the task:\n" + echo(task);
+        System.out.println(response);
+        return response;
+    }
+
     public static String echo(Task task) {
         String response = task + "\n" +
-                "Now you have " + TaskList.numOfTasks() + " tasks in the list\n" +
+                "You have " + TaskList.numOfTasks() + " tasks in the list\n" +
                 UI.lineBreak();
         return response;
     }

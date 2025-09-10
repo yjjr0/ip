@@ -1,6 +1,8 @@
 package yapbot.taskmanager;
 
-public class Task  {
+import java.time.LocalDate;
+
+public class Task implements Comparable<Task> {
     private String name;
     private boolean isMarked;
 
@@ -9,18 +11,32 @@ public class Task  {
         this.isMarked = isMarked;
     }
 
-    /**
-     * Marks the current task as done
-     */
-    public void mark() {
-        this.isMarked = true;
+    public void setName(String newName) {
+        this.name = newName;
     }
 
-    /**
-     * Unmarks the current task as not done
-     */
-    public void unmark() {
+    public Task mark() {
+        this.isMarked = true;
+        return this;
+    }
+
+    public Task unmark() {
         this.isMarked = false;
+        return this;
+    }
+
+    public LocalDate getISODate() {
+        return LocalDate.now();
+    }
+
+    @Override
+    public int compareTo(Task task) {
+        if (this.getISODate().isBefore(task.getISODate())) {
+            return 1;
+        } else if (this.getISODate().isAfter(task.getISODate())) {
+            return -1;
+        }
+        return 0;
     }
 
     /**

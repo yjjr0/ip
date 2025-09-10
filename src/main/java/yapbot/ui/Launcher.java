@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import yapbot.YapBot;
 import yapbot.storage.CommandList;
+import yapbot.storage.Storage;
 
 public class Launcher extends Application {
     private static AnchorPane mainLayout = new AnchorPane();
@@ -19,6 +20,7 @@ public class Launcher extends Application {
     private static VBox dialogContainer = new VBox();
     private static TextField userInput = new TextField();
     private static Button sendButton = new Button("Send");
+    private static Button downloadButton = new Button("↓");
     private static Scene scene = new Scene(mainLayout, 400, 500);
 
     public static void main(String[] args) {
@@ -27,9 +29,14 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) {
-        renderPage();
         renderGreeting();
+        renderPage();
         format(stage);
+    }
+
+    public static void renderGreeting() {
+        DialogBox greeting = new DialogBox(UI.greeting(), false);
+        dialogContainer.getChildren().add(greeting);
     }
 
     public void renderPage() {
@@ -47,17 +54,9 @@ public class Launcher extends Application {
             }
         });
 
-        userInput.setOnAction((event) -> {
-            addDialogBox();
-        });
-        sendButton.setOnMouseClicked((event) -> {
-            addDialogBox();
-        });
-    }
-
-    public static void renderGreeting() {
-        DialogBox greeting = new DialogBox(UI.greeting(), false);
-        dialogContainer.getChildren().add(greeting);
+        userInput.setOnAction(event -> addDialogBox());
+        sendButton.setOnMouseClicked(event -> addDialogBox());
+        downloadButton.setOnMouseClicked(event -> downloadTxtFile());
     }
 
     public static void addDialogBox() {
@@ -67,6 +66,10 @@ public class Launcher extends Application {
         DialogBox response = new DialogBox(YapBot.getResponse(command), false);
         dialogContainer.getChildren().addAll(input, response);
         userInput.clear();
+    }
+
+    public static void downloadTxtFile() {
+        Storage.writeTasks();
     }
 
     public static void setPreviousCommand() {
@@ -87,6 +90,7 @@ public class Launcher extends Application {
         formatDialogContainer();
         formatUserInput();
         formatSendButton();
+        formatDownloadButton();
     }
 
     public void formatStage(Stage stage) {
@@ -97,7 +101,7 @@ public class Launcher extends Application {
     }
 
     public void formatMainLayout() {
-        mainLayout.getChildren().addAll(scrollPane, userInput, sendButton);
+        mainLayout.getChildren().addAll(scrollPane, userInput, sendButton, downloadButton);
     }
 
     public void formatAnchorPane() {
@@ -108,9 +112,11 @@ public class Launcher extends Application {
 
         AnchorPane.setLeftAnchor(userInput, 10.0);
         AnchorPane.setBottomAnchor(userInput, 10.0);
-        AnchorPane.setRightAnchor(sendButton, 10.0);
+        AnchorPane.setRightAnchor(sendButton, 50.0);
         AnchorPane.setBottomAnchor(sendButton, 10.0);
-        AnchorPane.setRightAnchor(userInput, 90.0); // Adjusted for send button width
+        AnchorPane.setRightAnchor(downloadButton, 10.0);
+        AnchorPane.setBottomAnchor(downloadButton, 10.0);
+        AnchorPane.setRightAnchor(userInput, 110.0); // Adjusted for send button width
     }
 
     public void formatScrollPane() {
@@ -136,5 +142,10 @@ public class Launcher extends Application {
     public void formatSendButton() {
         sendButton.setFont(Font.font(14));
         sendButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5;");
+    }
+
+    public void formatDownloadButton() {
+        downloadButton.setFont(Font.font(14));
+        downloadButton.setStyle("-fx-background-color: grey; -fx-text-fill: white; -fx-background-radius: 5;");
     }
 }

@@ -1,7 +1,6 @@
 package yapbot.taskmanager;
 
 import java.time.LocalDate;
-import java.time.Month;
 
 public class DeadlineTask extends Task {
     private LocalDate deadline;
@@ -11,15 +10,17 @@ public class DeadlineTask extends Task {
         this.deadline = DateTime.convertToISO(deadline);
     }
 
+    @Override
+    public LocalDate getISODate() {
+        return this.deadline;
+    }
+
     /**
      * Gets the deadline in DD Month_Name YYYY Format
      * @return the deadline in DD Month_Name YYYY Format
      */
     private String getDeadline() {
-        int day = this.deadline.getDayOfMonth();
-        Month month = this.deadline.getMonth();
-        int year = this.deadline.getYear();
-        return day + " " + month + " " + year;
+        return DateTime.convertFromISO(this.deadline);
     }
 
     /**
