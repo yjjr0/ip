@@ -66,6 +66,7 @@ public class Parser {
             Task task = TaskList.getTask(index);
             assert task != null : UI.taskNotFound();
             task.mark();
+
             String response = "     Nice! I've marked this task as done:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________";

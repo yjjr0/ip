@@ -47,7 +47,6 @@ public class ParserTest {
                 "[mark] 2",
                 "[mark] 3",
         };
-
         for (String validMark : VALID_MARKS) {
             assertTrue(Parser.markTest(validMark));
         }

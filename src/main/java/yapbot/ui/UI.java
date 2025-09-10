@@ -1,6 +1,7 @@
 package yapbot.ui;
 
 public class UI {
+    private static final String SYSTEM_LINE_BREAK = "____________________________________________________________";
     private static final String SYSTEM_MESSAGE_GREETING =
             """
             ____________________________________________________________
@@ -84,6 +85,11 @@ public class UI {
                OOPS!!! I'm sorry, the task could not be located :-(
             ____________________________________________________________
             """;
+
+    public static String lineBreak() {
+        System.out.println(SYSTEM_LINE_BREAK);
+        return SYSTEM_LINE_BREAK;
+    }
 
     public static String greeting() {
         System.out.println(SYSTEM_MESSAGE_GREETING);
