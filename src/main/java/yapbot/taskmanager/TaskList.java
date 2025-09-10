@@ -74,6 +74,7 @@ public class TaskList {
     public static boolean searchTest(String keyword) {
         int index = 1;
 
+        System.out.println("Here are the tasks that matches with " + "'" + keyword + "'\n");
         for (Task task : TASKS) {
             if (matching(task, keyword)) {
                 System.out.println("        " + index + ". " + task.toString());

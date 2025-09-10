@@ -35,22 +35,42 @@ public class Parser {
      * @param task the command input from the user
      */
     public static String setTask(String task) {
-        if (task.startsWith("[h]") || task.startsWith("[H]")) {
+        if (getCommand(task, "[h]")) {
             return UI.help();
-        } else if (task.startsWith("[mark]")) {
+        } else if (getCommand(task,"[mark]")) {
             return mark(task);
-        } else if (task.startsWith("[unmark]")) {
+        } else if (getCommand(task,"[unmark]")) {
             return unmark(task);
-        } else if (task.startsWith("[delete]")) {
+        } else if (getCommand(task,"[delete]")) {
             return delete(task);
-        } else if (task.startsWith("[find]")) {
+        } else if (getCommand(task,"[find]")) {
             return find(task);
-        } else if (task.startsWith("[list]")) {
+        } else if (getCommand(task,"[list]")) {
             return list();
-        } else if (task.startsWith("[bye]")) {
+        } else if (getCommand(task,"[bye]")) {
             return UI.farewell();
         } else {
             return storeTask(task);
+        }
+    }
+
+    /**
+     * Filter by type and Stores the task into the local storage
+     *
+     * @param task the CLI input from the user
+     */
+    public static String storeTask(String task) {
+        if (getCommand(task,"[t]")) {
+            System.out.println("ToDo task available:");
+            return addToDoTask(task);
+        } else if (getCommand(task,"[d]")) {
+            System.out.println("Deadline task available:");
+            return addDeadlineTask(task);
+        } else if (getCommand(task,"[e]")) {
+            System.out.println("Event task available:");
+            return addEventTask(task);
+        } else {
+            return UI.invalidCommand();
         }
     }
 
@@ -66,13 +86,7 @@ public class Parser {
             Task task = TaskList.getTask(index);
             assert task != null : UI.taskNotFound();
             task.mark();
-
-            String response = "     Nice! I've marked this task as done:\n" +
-                    "        " + task + "\n" +
-                    "____________________________________________________________";
-
-            System.out.println(response);
-            return response;
+            return UI.markedTask(task);
         } catch (RuntimeException IndexOutOfBoundsException) {
             return UI.taskNotFound();
         }
@@ -89,10 +103,7 @@ public class Parser {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
             task.mark();
-
-            System.out.println("     Nice! I've marked this task as done:\n" +
-                    "        " + task + "\n" +
-                    "____________________________________________________________");
+            UI.markedTask(task);
             return true;
         } catch (RuntimeException IndexOutOfBoundsException) {
             UI.taskNotFound();
@@ -112,18 +123,11 @@ public class Parser {
             Task task = TaskList.getTask(index);
             assert task != null : UI.taskNotFound();
             task.unmark();
-
-            String response = "     OK, I've marked this task as not done yet:\n" +
-                    "        " + task + "\n" +
-                    "____________________________________________________________";
-
-            System.out.println(response);
-            return response;
+            return UI.unmarkedTask(task);
         } catch (RuntimeException IndexOutOfBoundsException) {
             return UI.taskNotFound();
         }
     }
-
 
     /**
      * the testing version of String unmark(input : String)
@@ -137,10 +141,7 @@ public class Parser {
             Task task = TaskList.getTask(index);
             assert task != null : UI.taskNotFound();
             task.unmark();
-
-            System.out.println("     OK, I've marked this task as not done yet:\n" +
-                    "        " + task + "\n" +
-                    "____________________________________________________________");
+            UI.unmarkedTask(task);
             return true;
         } catch (RuntimeException IndexOutOfBoundsException) {
             UI.taskNotFound();
@@ -159,10 +160,7 @@ public class Parser {
             int index = getTaskNumber(input);
             Task task = TaskList.removeTask(index);
             assert task != null : UI.taskNotFound();
-
-            String response = "     Noted. I've removed this task:\n" + echo(task);
-            System.out.println(response);
-            return response;
+            return UI.deletedTask(task);
         } catch (RuntimeException IndexOutOfBoundsException) {
             return UI.taskNotFound();
         }
@@ -179,16 +177,13 @@ public class Parser {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
             TaskList.removeTask(index);
-
-            System.out.println("     Noted. I've removed this task:");
-            echo(task);
+            UI.deletedTask(task);
             return true;
         } catch (RuntimeException IndexOutOfBoundsException) {
             UI.taskNotFound();
             return false;
         }
     }
-
 
     /**
      * Deletes the task at the specified index
@@ -200,7 +195,6 @@ public class Parser {
         try {
             String keyword = getTaskDescription(input);
             String response = TaskList.search(keyword);
-
             System.out.println(response);
             return response;
         } catch (RuntimeException IndexOutOfBoundsException) {
@@ -217,9 +211,8 @@ public class Parser {
     public static boolean findTest(String input) {
         try {
             String keyword = getTaskDescription(input);
-            System.out.println("     Here are the tasks that matches with " + "'" + keyword + "'");
             boolean isFound = TaskList.searchTest(keyword);
-            System.out.println("____________________________________________________________");
+            UI.lineBreak();
             return isFound;
         } catch (RuntimeException IndexOutOfBoundsException) {
             UI.taskNotFound();
@@ -238,26 +231,6 @@ public class Parser {
     }
 
     /**
-     * Filter by type and Stores the task into the local storage
-     *
-     * @param task the CLI input from the user
-     */
-    public static String storeTask(String task) {
-        if (task.startsWith("[T]")) {
-            System.out.println("     ToDo task available:" );
-            return addToDoTask(task);
-        } else if (task.startsWith("[D]")) {
-            System.out.println("     Deadline task available:" );
-            return addDeadlineTask(task);
-        } else if (task.startsWith("[E]")) {
-            System.out.println("     Event task available:" );
-            return addEventTask(task);
-        } else {
-            return UI.invalidCommand();
-        }
-    }
-
-    /**
      * Initialise a ToDoTask and Stores it into the local storage
      *
      * @param input the CLI input from the user
@@ -267,7 +240,7 @@ public class Parser {
         boolean isMarked = isMarked(input);
         Task task = new ToDoTask(name, isMarked);
         TaskList.addTask(task);
-        return echo(task);
+        return UI.echo(task);
     }
 
     /**
@@ -281,7 +254,7 @@ public class Parser {
         String deadline = getFlag(input, "-by.");
         Task task = new DeadlineTask(name, isMarked, deadline);
         TaskList.addTask(task);
-        return echo(task);
+        return UI.echo(task);
     }
 
     /**
@@ -296,7 +269,17 @@ public class Parser {
         String endDateTime = getFlag(input, "-to.");
         Task task = new EventTask(name, isMarked, startDateTime, endDateTime);
         TaskList.addTask(task);
-        return echo(task);
+        return UI.echo(task);
+    }
+
+    /**
+     * Gets the task description from the CLI
+     *
+     * @param input the CLI input from the user
+     * @return the task description
+     */
+    public static boolean getCommand(String input, String command) {
+        return input.toLowerCase().startsWith(command);
     }
 
     /**
@@ -342,20 +325,5 @@ public class Parser {
      */
     public static boolean isMarked(String input) {
         return input.charAt(4) == 'X';
-    }
-
-    /**
-     * returns the string format of the task description and number of tasks available
-     *
-     * @param task the task object
-     * @return the task description and number of tasks available
-     */
-    public static String echo(Task task) {
-        String output = "        " + task + "\n" +
-                        "     Now you have " + TaskList.numOfTasks() + " tasks in the list\n" +
-                        "____________________________________________________________";
-
-        System.out.println(output);
-        return output;
     }
 }
