@@ -1,0 +1,3 @@
+[T][ ] todo
+[D][ ] deadline -by 22 NOVEMBER 2003
+[E][ ] event -from Mon -to Fri

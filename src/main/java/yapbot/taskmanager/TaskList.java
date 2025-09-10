@@ -1,5 +1,7 @@
 package yapbot.taskmanager;
 
+import yapbot.ui.UI;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +33,10 @@ public class TaskList {
      * Prints the tasks currently int the list
      */
     public static String listTasks() {
-        int index = 1;
-        String response = "     Here are the tasks in your list:\n";
-
-        for (Task task : TASKS) {
-            response += "        " + index + ". " + task.toString() + "\n";
-            index++;
-        }
-
-        response += "____________________________________________________________";
-
-        return response;
+        return TASKS.stream()
+                .map(task -> task.toString() + "\n")
+                .reduce("Here are the tasks in your list:\n", (response, task) -> response + task)
+                + UI.lineBreak();
     }
 
     /**
@@ -57,19 +52,19 @@ public class TaskList {
      * @return the list of tasks that matches with the specified keyword
      */
     public static String search(String keyword) {
-        int index = 1;
-        String response = "     Here are the tasks that matches with " + "'" + keyword + "'\n";
+        return TASKS.stream()
+                .filter(task -> matching(task, keyword))
+                .map(task -> task.toString() + "\n")
+                .reduce("Here are the tasks that matches with " + "'" + keyword + "'\n", (response, task) -> response + task)
+                + UI.lineBreak();
+    }
 
-        for (Task task : TASKS) {
-            if (matching(task, keyword)) {
-                response += "        " + index + ". " + task.toString() + "\n";
-                index++;
-            }
-        }
-
-        response += "____________________________________________________________";
-
-        return response;
+    /**
+     * Checks if tasks contains the specified keyword
+     * @return true if the keyword is found, else false
+     */
+    private static boolean matching(Task task, String keyword) {
+        return task.toString().contains(keyword);
     }
 
     /**
@@ -90,23 +85,11 @@ public class TaskList {
     }
 
     /**
-     * Checks if tasks contains the specified keyword
-     * @return true if the keyword is found, else false
-     */
-    private static boolean matching(Task task, String keyword) {
-        return task.toString().contains(keyword);
-    }
-
-    /**
      * Gets the list of tasks as a single string
      */
     public static String getTasksAsTxt() {
-        String tasks = "";
-
-        for (Task task : TASKS) {
-            tasks += (task + System.lineSeparator());
-        }
-
-        return tasks;
+        return TASKS.stream()
+                .map(task -> task + System.lineSeparator())
+                .reduce("", (response, task) -> response + task);
     }
 }
