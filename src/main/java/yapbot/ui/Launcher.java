@@ -28,6 +28,7 @@ public class Launcher extends Application {
     @Override
     public void start(Stage stage) {
         renderPage();
+        renderGreeting();
         format(stage);
     }
 
@@ -52,6 +53,11 @@ public class Launcher extends Application {
         sendButton.setOnMouseClicked((event) -> {
             addDialogBox();
         });
+    }
+
+    public static void renderGreeting() {
+        DialogBox greeting = new DialogBox(UI.greeting(), false);
+        dialogContainer.getChildren().add(greeting);
     }
 
     public static void addDialogBox() {

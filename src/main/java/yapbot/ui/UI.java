@@ -1,10 +1,12 @@
 package yapbot.ui;
 
+import yapbot.taskmanager.Task;
+import yapbot.taskmanager.TaskList;
+
 public class UI {
-    private static final String SYSTEM_LINE_BREAK = "____________________________________________________________";
+    private static final String SYSTEM_LINE_BREAK = "\n____________________________________________________________";
     private static final String SYSTEM_MESSAGE_GREETING =
             """
-            ____________________________________________________________
                                   Hello! I'm YapBot
                                 What can I do for you?
                         Enter [h]/[H] for a list of valid commands
@@ -55,6 +57,7 @@ public class UI {
                 [bye]~ exits the chatbot
             ____________________________________________________________
             """;
+
     private static final String SYSTEM_ERROR_INVALID_COMMAND =
             """
                     OOPS!!! I'm sorry, the command does not exists :-(
@@ -67,7 +70,6 @@ public class UI {
                     Enter [h]/[H] for a list of valid commands
             ____________________________________________________________
             """;
-
     private static final String SYSTEM_ERROR_INVALID_FLAG =
             """
                     OOPS!!! I'm sorry, the flag does not exists :-(
@@ -124,6 +126,31 @@ public class UI {
     public static String help() {
         System.out.println(SYSTEM_MESSAGE_HELP);
         return SYSTEM_MESSAGE_HELP;
+    }
+
+    public static String markedTask(Task task) {
+        String response = "Nice! I've marked this task as done:\n" + echo(task);
+        System.out.println(response);
+        return response;
+    }
+
+    public static String unmarkedTask(Task task) {
+        String response = "OK, I've marked this task as not done yet:\n" + echo(task);
+        System.out.println(response);
+        return response;
+    }
+
+    public static String deletedTask(Task task) {
+        String response = "Noted. I've removed this task:\n" + echo(task);
+        System.out.println(response);
+        return response;
+    }
+
+    public static String echo(Task task) {
+        String response = task + "\n" +
+                "Now you have " + TaskList.numOfTasks() + " tasks in the list\n" +
+                UI.lineBreak();
+        return response;
     }
 
     public static String invalidCommand() {
