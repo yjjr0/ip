@@ -64,6 +64,7 @@ public class Parser {
         try {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
+            assert task != null : UI.taskNotFound();
             task.mark();
             String response = "     Nice! I've marked this task as done:\n" +
                     "        " + task + "\n" +
@@ -87,6 +88,7 @@ public class Parser {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
             task.mark();
+
             System.out.println("     Nice! I've marked this task as done:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________");
@@ -107,7 +109,9 @@ public class Parser {
         try {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
+            assert task != null : UI.taskNotFound();
             task.unmark();
+
             String response = "     OK, I've marked this task as not done yet:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________";
@@ -130,7 +134,9 @@ public class Parser {
         try {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
+            assert task != null : UI.taskNotFound();
             task.unmark();
+
             System.out.println("     OK, I've marked this task as not done yet:\n" +
                     "        " + task + "\n" +
                     "____________________________________________________________");
@@ -151,8 +157,9 @@ public class Parser {
         try {
             int index = getTaskNumber(input);
             Task task = TaskList.removeTask(index);
-            String response = "     Noted. I've removed this task:\n" + echo(task);
+            assert task != null : UI.taskNotFound();
 
+            String response = "     Noted. I've removed this task:\n" + echo(task);
             System.out.println(response);
             return response;
         } catch (RuntimeException IndexOutOfBoundsException) {
@@ -171,6 +178,7 @@ public class Parser {
             int index = getTaskNumber(input);
             Task task = TaskList.getTask(index);
             TaskList.removeTask(index);
+
             System.out.println("     Noted. I've removed this task:");
             echo(task);
             return true;
